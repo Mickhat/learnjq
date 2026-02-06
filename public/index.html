@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>learnjq — Interactive jq Tutorial & Playground</title>
+  <meta name="description" content="Learn jq interactively with hands-on lessons, challenges, a live playground, and a pipe visualizer. Master JSON processing from basics to expert.">
+  <meta property="og:title" content="learnjq — Interactive jq Tutorial & Playground">
+  <meta property="og:description" content="Learn jq interactively with hands-on lessons, challenges, and a live playground.">
+  <meta property="og:url" content="https://learnjq.dev">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+  <!-- ===== NAVIGATION BAR ===== -->
+  <nav id="topnav">
+    <div class="nav-brand" onclick="goHome()">
+      <span class="logo-mark">learn<strong>jq</strong></span>
+    </div>
+    <button class="hamburger" id="hamburger" onclick="toggleNav()">☰</button>
+    <div class="nav-tabs" id="nav-tabs">
+      <button class="nav-tab" data-mode="tutorial" onclick="showMode('tutorial');closeNav()">🚀 Start</button>
+      <button class="nav-tab" data-mode="learn" onclick="showMode('learn');closeNav()">📚 Learn</button>
+      <button class="nav-tab" data-mode="playground" onclick="showMode('playground');closeNav()">⚡ Playground</button>
+      <button class="nav-tab" data-mode="challenges" onclick="showMode('challenges');closeNav()">🏆 Challenges</button>
+      <button class="nav-tab" data-mode="visualizer" onclick="showMode('visualizer');closeNav()">🔬 Visualizer</button>
+      <button class="nav-tab" data-mode="explain" onclick="showMode('explain');closeNav()">💡 Explain</button>
+      <button class="nav-tab" data-mode="reference" onclick="showMode('reference');closeNav()">📖 Reference</button>
+    </div>
+    <div class="nav-right">
+      <span id="progress-badge" style="display:none">0/0</span>
+      <button class="btn-sm" onclick="resetProgress()" title="Reset all progress">🔄 Reset</button>
+      <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+    </div>
+  </nav>
+
+  <!-- ===== TUTORIAL / GETTING STARTED ===== -->
+  <div id="mode-tutorial" class="mode-panel">
+    <div class="tutorial-layout">
+      <div class="tutorial-content">
+        <div class="tutorial-hero">
+          <h1>Getting Started with <strong>jq</strong></h1>
+          <p class="tutorial-subtitle">Learn to slice, filter, and transform JSON data — in 5 minutes.</p>
+        </div>
+
+        <section class="tutorial-section">
+          <h2>What is jq?</h2>
+          <p><code>jq</code> is a lightweight command-line tool for processing JSON. Think of it as <strong>grep + sed + awk — but for structured data</strong>.</p>
+          <p>If you've ever stared at a wall of JSON from an API and thought <em>"I just want the names"</em> — jq is your answer.</p>
+          <div class="tutorial-terminal">
+            <div class="terminal-header">Terminal</div>
+            <pre><span class="hl-dim">$</span> curl -s api.github.com/users/Mickhat | <span class="hl-jq">jq '{login, repos: .public_repos}'</span>
+<span class="hl-output">{
+  "login": "Mickhat",
+  "repos": 22
+}</span></pre>
+          </div>
+        </section>
+
+        <section class="tutorial-section">
+          <h2>Install jq</h2>
+          <div class="install-grid">
+            <div class="install-card">
+              <strong>macOS</strong>
+              <code>brew install jq</code>
+            </div>
+            <div class="install-card">
+              <strong>Ubuntu / Debian</strong>
+              <code>sudo apt install jq</code>
+            </div>
+            <div class="install-card">
+              <strong>Arch Linux</strong>
+              <code>sudo pacman -S jq</code>
+            </div>
+            <div class="install-card">
+              <strong>Windows</strong>
+              <code>scoop install jq</code>
+            </div>
+          </div>
+          <p class="tutorial-note">Or skip installation entirely — the playground on this site runs jq server-side. Just start typing!</p>
+        </section>
+
+        <section class="tutorial-section">
+          <h2>Your First 5 Filters</h2>
+          <p>All examples below are <strong>interactive</strong>. Edit the filter and watch the output change in real-time.</p>
+
+          <div class="tutorial-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h3>The identity filter: <code>.</code></h3>
+              <p>A dot (<code>.</code>) means "the whole input". It passes data through unchanged — like <code>cat</code> for JSON.</p>
+              <div class="tutorial-sandbox" data-input='{"name":"Alice","age":30,"city":"Berlin"}'>
+                <div class="sandbox-filter">
+                  <span class="sandbox-label">jq</span>
+                  <input type="text" class="sandbox-input" value="." oninput="runTutorialSandbox(this)">
+                </div>
+                <pre class="sandbox-output"></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="tutorial-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h3>Access a field: <code>.name</code></h3>
+              <p>Dot + field name extracts a single value. Try <code>.age</code> or <code>.city</code>.</p>
+              <div class="tutorial-sandbox" data-input='{"name":"Alice","age":30,"city":"Berlin"}'>
+                <div class="sandbox-filter">
+                  <span class="sandbox-label">jq</span>
+                  <input type="text" class="sandbox-input" value=".name" oninput="runTutorialSandbox(this)">
+                </div>
+                <pre class="sandbox-output"></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="tutorial-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h3>Iterate arrays: <code>.[]</code></h3>
+              <p>Square brackets after a dot unpack every element from an array.</p>
+              <div class="tutorial-sandbox" data-input='["Berlin","Munich","Hamburg","Cologne"]'>
+                <div class="sandbox-filter">
+                  <span class="sandbox-label">jq</span>
+                  <input type="text" class="sandbox-input" value=".[]" oninput="runTutorialSandbox(this)">
+                </div>
+                <pre class="sandbox-output"></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="tutorial-step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <h3>Pipe it: <code>.users[] | .name</code></h3>
+              <p>The pipe <code>|</code> chains filters — output of the left becomes input of the right. Just like shell pipes.</p>
+              <div class="tutorial-sandbox" data-input='{"users":[{"name":"Alice","role":"admin"},{"name":"Bob","role":"user"},{"name":"Carol","role":"user"}]}'>
+                <div class="sandbox-filter">
+                  <span class="sandbox-label">jq</span>
+                  <input type="text" class="sandbox-input" value=".users[] | .name" oninput="runTutorialSandbox(this)">
+                </div>
+                <pre class="sandbox-output"></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="tutorial-step">
+            <div class="step-number">5</div>
+            <div class="step-content">
+              <h3>Filter with select: <code>select(.age > 25)</code></h3>
+              <p><code>select()</code> keeps only elements that match a condition. Combine it with pipes for powerful queries.</p>
+              <div class="tutorial-sandbox" data-input='[{"name":"Alice","age":30},{"name":"Bob","age":22},{"name":"Carol","age":28},{"name":"Dave","age":19}]'>
+                <div class="sandbox-filter">
+                  <span class="sandbox-label">jq</span>
+                  <input type="text" class="sandbox-input" value=".[] | select(.age > 25) | .name" oninput="runTutorialSandbox(this)">
+                </div>
+                <pre class="sandbox-output"></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tutorial-section">
+          <h2>What's next?</h2>
+          <div class="tutorial-next-grid">
+            <div class="next-card" onclick="showMode('learn')">
+              <span class="next-icon">📚</span>
+              <h3>57 Lessons</h3>
+              <p>From basics to advanced — with exercises for every topic.</p>
+            </div>
+            <div class="next-card" onclick="showMode('challenges')">
+              <span class="next-icon">🏆</span>
+              <h3>Challenges</h3>
+              <p>Test your skills with real-world data transformation problems.</p>
+            </div>
+            <div class="next-card" onclick="showMode('playground')">
+              <span class="next-icon">⚡</span>
+              <h3>Playground</h3>
+              <p>Paste your own JSON and experiment freely.</p>
+            </div>
+            <div class="next-card" onclick="showMode('explain')">
+              <span class="next-icon">💡</span>
+              <h3>Explainer</h3>
+              <p>Paste any jq filter and get a step-by-step breakdown.</p>
+            </div>
+          </div>
+        </section>
+
+        <div class="tutorial-footer">
+          <button class="btn btn-primary btn-lg" onclick="showMode('learn')">Start Learning →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== LEARN MODE ===== -->
+  <div id="mode-learn" class="mode-panel active">
+    <aside id="lesson-sidebar">
+      <div class="sidebar-header">
+        <input type="text" id="lesson-search" placeholder="Search lessons..." oninput="filterLessons(this.value)">
+      </div>
+      <div class="progress-bar-container" id="lesson-progress">
+        <div class="progress-bar"><div class="progress-bar-fill" id="lesson-progress-fill"></div></div>
+        <span class="progress-label" id="lesson-progress-label">0/0</span>
+      </div>
+      <div id="lesson-list"></div>
+    </aside>
+    <main id="lesson-content">
+      <div id="lesson-header">
+        <h1 id="lesson-title">Welcome to learnjq</h1>
+        <p id="lesson-desc">Select a lesson from the sidebar to begin.</p>
+      </div>
+      <div id="lesson-explanation"></div>
+      <div id="lesson-exercise" class="exercise-area">
+        <div class="exercise-panels">
+          <div class="panel">
+            <div class="panel-header">
+              <span>📄 JSON Input</span>
+              <button class="btn-sm" onclick="resetExercise()">Reset</button>
+            </div>
+            <textarea id="learn-input" spellcheck="false" placeholder="JSON input..."></textarea>
+          </div>
+          <div class="panel">
+            <div class="panel-header">
+              <span>🔧 jq Filter</span>
+              <span id="learn-hint-btn" class="hint-btn" onclick="showHint()">💡 Hint</span>
+            </div>
+            <input type="text" id="learn-filter" spellcheck="false" placeholder="Type your jq filter here..." oninput="runLearnQuery()">
+            <div id="learn-hint" class="hint-box hidden"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-header">
+              <span>📤 Output</span>
+              <span id="learn-status"></span>
+            </div>
+            <pre id="learn-output" class="output-area"></pre>
+          </div>
+          <div class="panel" id="expected-panel">
+            <div class="panel-header">
+              <span>🎯 Expected Output</span>
+            </div>
+            <pre id="learn-expected" class="output-area expected"></pre>
+          </div>
+        </div>
+        <div id="learn-nav" class="lesson-nav">
+          <button id="btn-prev" class="btn" onclick="prevLesson()">← Previous</button>
+          <button id="btn-next" class="btn btn-primary" onclick="nextLesson()">Next →</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ===== PLAYGROUND MODE ===== -->
+  <div id="mode-playground" class="mode-panel">
+    <div class="playground-layout">
+      <div class="pg-left">
+        <div class="panel-header">
+          <span>📄 JSON Input</span>
+          <div>
+            <button class="btn-sm" onclick="loadSample()">Sample Data</button>
+            <button class="btn-sm" onclick="formatJSON()">Format</button>
+            <button class="btn-sm" onclick="clearPlayground()">Clear</button>
+          </div>
+        </div>
+        <textarea id="pg-input" spellcheck="false" placeholder='Paste your JSON here...&#10;&#10;{"name": "world"}'></textarea>
+      </div>
+      <div class="pg-middle">
+        <div class="panel-header">
+          <span>🔧 jq Filter</span>
+          <div class="pg-options">
+            <button class="opt-pill" id="opt-raw" title="Raw output — no quotes around strings" onclick="this.classList.toggle('active');runPlayground()">-r</button>
+            <button class="opt-pill" id="opt-slurp" title="Slurp — read all inputs into one array" onclick="this.classList.toggle('active');runPlayground()">-s</button>
+            <button class="opt-pill" id="opt-null" title="Null input — don't read any input" onclick="this.classList.toggle('active');runPlayground()">-n</button>
+            <button class="btn-sm share-btn" onclick="copyShareUrl()" title="Copy shareable link">🔗 Share</button>
+          </div>
+        </div>
+        <input type="text" id="pg-filter" spellcheck="false" value="." placeholder="jq filter..." oninput="runPlayground()">
+        <div id="pg-history" class="history-list"></div>
+      </div>
+      <div class="pg-right">
+        <div class="panel-header">
+          <span>📤 Output</span>
+          <div>
+            <button class="btn-sm" onclick="copyOutput()">Copy</button>
+            <span id="pg-time"></span>
+          </div>
+        </div>
+        <pre id="pg-output" class="output-area placeholder">Type a jq filter and press Enter to see results...</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CHALLENGES MODE ===== -->
+  <div id="mode-challenges" class="mode-panel">
+    <div class="challenges-layout">
+      <aside id="challenge-sidebar">
+        <h3>🏆 Challenges</h3>
+        <div class="progress-bar-container" id="challenge-progress">
+          <div class="progress-bar"><div class="progress-bar-fill" id="challenge-progress-fill"></div></div>
+          <span class="progress-label" id="challenge-progress-label">0/0</span>
+        </div>
+        <div id="challenge-list"></div>
+      </aside>
+      <main id="challenge-content">
+        <div id="challenge-header">
+          <h2 id="ch-title">Select a challenge</h2>
+          <span id="ch-difficulty"></span>
+        </div>
+        <p id="ch-desc"></p>
+        <div class="exercise-panels">
+          <div class="panel">
+            <div class="panel-header"><span>📄 Input</span></div>
+            <pre id="ch-input" class="output-area"></pre>
+          </div>
+          <div class="panel">
+            <div class="panel-header">
+              <span>🔧 Your Solution</span>
+              <button class="btn-sm btn-primary" onclick="checkChallenge()">▶ Check</button>
+            </div>
+            <input type="text" id="ch-filter" spellcheck="false" placeholder="Write your jq filter...">
+          </div>
+          <div class="panel">
+            <div class="panel-header"><span>📤 Your Output</span></div>
+            <pre id="ch-output" class="output-area"></pre>
+          </div>
+          <div class="panel">
+            <div class="panel-header"><span>🎯 Expected</span></div>
+            <pre id="ch-expected" class="output-area expected"></pre>
+          </div>
+        </div>
+        <div id="ch-result" class="hidden"></div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ===== VISUALIZER MODE ===== -->
+  <div id="mode-visualizer" class="mode-panel">
+    <div class="viz-layout">
+      <div class="viz-input-section">
+        <div class="panel-header">
+          <span>📄 JSON Input</span>
+          <button class="btn-sm" onclick="loadVizSample()">Sample</button>
+        </div>
+        <textarea id="viz-input" spellcheck="false" placeholder='{"name": "Alice", "age": 30}'></textarea>
+      </div>
+      <div class="viz-filter-section">
+        <input type="text" id="viz-filter" spellcheck="false" placeholder="Enter a jq filter with pipes  —  e.g.  .users[] | select(.age > 25) | .name" onkeydown="if(event.key==='Enter')runVisualizer()">
+        <button class="btn-primary viz-run-btn" onclick="runVisualizer()">▶ Visualize</button>
+        <button class="btn-sm share-btn" onclick="copyShareUrl()" title="Copy shareable link">🔗</button>
+      </div>
+      <div class="viz-pipeline" id="viz-pipeline">
+        <div class="viz-empty">
+          <p>🔬 <strong>Pipe Visualizer</strong></p>
+          <p>Enter a jq filter with pipes (<code>|</code>) and click <strong>Visualize</strong> to see the data transformation step by step.</p>
+          <div class="viz-examples">
+            <p>Try these:</p>
+            <button class="viz-example-btn" onclick="vizExample(0)">.[] | select(.age > 28) | .name</button>
+            <button class="viz-example-btn" onclick="vizExample(1)">.users | sort_by(.age) | reverse | .[0]</button>
+            <button class="viz-example-btn" onclick="vizExample(2)">.users | map({name, city}) | group_by(.city)</button>
+            <button class="viz-example-btn" onclick="vizExample(3)">.users | map(.age) | add / length</button>
+            <button class="viz-example-btn" onclick="vizExample(4)">to_entries | map(select(.value | type == "string")) | from_entries</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== EXPLAIN MODE ===== -->
+  <div id="mode-explain" class="mode-panel">
+    <div class="explain-layout">
+      <div class="explain-input-bar">
+        <input type="text" id="explain-filter" spellcheck="false" placeholder="Type a jq filter to explain...  e.g.  .users[] | select(.age > 25) | {name, city}" oninput="runExplainer()">
+        <button class="btn-sm share-btn explain-share" onclick="copyShareUrl()" title="Copy shareable link">🔗</button>
+      </div>
+      <div class="explain-result" id="explain-result">
+        <div class="explain-empty">
+          <p>💡 <strong>Filter Explainer</strong></p>
+          <p>Type any jq expression above and each part will be annotated with an explanation.</p>
+          <p style="margin-top:16px">Like <a href="https://explainshell.com" target="_blank" style="color:var(--accent)">explainshell.com</a> — but for jq.</p>
+          <div class="explain-examples">
+            <p>Try these:</p>
+            <button class="viz-example-btn" onclick="explainExample('.users[] | select(.age > 25) | {name, city}')">.users[] | select(.age > 25) | {name, city}</button>
+            <button class="viz-example-btn" onclick="explainExample('to_entries | map(select(.value | type == \"string\")) | from_entries')">to_entries | map(select(.value | type == "string")) | from_entries</button>
+            <button class="viz-example-btn" onclick="explainExample('[.[] | .name] | sort | reverse | .[0:3]')">[.[] | .name] | sort | reverse | .[0:3]</button>
+            <button class="viz-example-btn" onclick="explainExample('reduce .[] as $x (0; . + $x)')">reduce .[] as $x (0; . + $x)</button>
+            <button class="viz-example-btn" onclick="explainExample('.items | group_by(.category) | map({key: .[0].category, count: length})')">.items | group_by(.category) | map({key: .[0].category, count: length})</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== REFERENCE MODE ===== -->
+  <div id="mode-reference" class="mode-panel">
+    <div class="reference-layout">
+      <div id="ref-content"></div>
+    </div>
+  </div>
+
+  <!-- ===== MOBILE SIDEBAR TOGGLE ===== -->
+  <button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()">☰ Lessons</button>
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <script src="lessons.js"></script>
+  <script src="challenges.js"></script>
+  <script src="reference.js"></script>
+  <script src="explainer.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
