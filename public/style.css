@@ -1266,6 +1266,8 @@ body {
 #site-footer:hover { opacity: 1; }
 #site-footer a { color: var(--fg-dim); text-decoration: none; }
 #site-footer a:hover { color: var(--accent); }
+#site-footer .kofi-link { color: var(--yellow); }
+#site-footer .kofi-link:hover { color: var(--orange); }
 
 /* Option pills (playground flags) */
 .opt-pill {
@@ -1467,6 +1469,19 @@ body {
 .tutorial-footer {
   text-align: center;
   margin-top: 40px;
+}
+.tutorial-support {
+  margin-top: 16px;
+  font-size: 0.85rem;
+  color: var(--fg-dim);
+}
+.tutorial-support a {
+  color: var(--yellow);
+  text-decoration: none;
+}
+.tutorial-support a:hover {
+  color: var(--orange);
+  text-decoration: underline;
 }
 
 .btn-lg {
