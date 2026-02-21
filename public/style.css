@@ -940,6 +940,21 @@ body {
   width: 100%;
 }
 .ref-section { margin-bottom: 32px; }
+.ref-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 16px 16px;
+  margin-top: 16px;
+  font-size: 0.75rem;
+  color: var(--fg-dim);
+  opacity: 0.6;
+}
+.ref-footer a { color: var(--fg-dim); text-decoration: none; }
+.ref-footer a:hover { color: var(--accent); }
+.ref-footer .kofi-link { color: var(--yellow); }
+.ref-footer .kofi-link:hover { color: var(--orange); }
 .ref-section h2 {
   color: var(--accent);
   border-bottom: 2px solid var(--border);

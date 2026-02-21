@@ -119,7 +119,7 @@ function showMode(mode, skipHash) {
   // Hide footer on full-screen modes
   const footer = document.getElementById('site-footer');
   if (footer) {
-    const hideFooter = ['playground', 'visualizer'].includes(mode);
+    const hideFooter = ['playground', 'visualizer', 'reference'].includes(mode);
     footer.style.display = hideFooter ? 'none' : '';
   }
 
@@ -872,7 +872,16 @@ function renderReference() {
         `).join('')}
       </div>
     </div>
-  `).join('');
+  `).join('') + `
+    <div class="ref-footer">
+      <a href="/legal.html#imprint">Imprint</a>
+      <span>·</span>
+      <a href="/legal.html#privacy">Privacy</a>
+      <span>·</span>
+      <a href="https://github.com/Mickhat/learnjq" target="_blank">GitHub</a>
+      <span>·</span>
+      <a href="https://ko-fi.com/mickhat" target="_blank" class="kofi-link">☕ Support</a>
+    </div>`;
 }
 
 // === KEYBOARD SHORTCUTS ===
