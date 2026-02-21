@@ -1244,6 +1244,29 @@ body {
 .hl-output { color: #7ee787; }
 .hl-dim { color: #6e7681; }
 
+/* ===== FOOTER ===== */
+#site-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  font-size: 0.75rem;
+  color: var(--fg-dim);
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  z-index: 50;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+#site-footer:hover { opacity: 1; }
+#site-footer a { color: var(--fg-dim); text-decoration: none; }
+#site-footer a:hover { color: var(--accent); }
+
 /* Option pills (playground flags) */
 .opt-pill {
   padding: 3px 10px;
