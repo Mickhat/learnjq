@@ -147,6 +147,7 @@ body {
   border-right: 1px solid var(--border);
   overflow-y: auto;
   padding: 12px;
+  padding-bottom: 36px;
 }
 .sidebar-header { margin-bottom: 12px; }
 #lesson-search {
@@ -426,6 +427,7 @@ body {
   border-right: 1px solid var(--border);
   overflow-y: auto;
   padding: 16px;
+  padding-bottom: 36px;
 }
 #challenge-sidebar h3 { margin-bottom: 12px; }
 #challenge-content {
@@ -1258,7 +1260,6 @@ body {
   font-size: 0.75rem;
   color: var(--fg-dim);
   background: var(--bg);
-  border-top: 1px solid var(--border);
   z-index: 50;
   opacity: 0.6;
   transition: opacity 0.2s;
