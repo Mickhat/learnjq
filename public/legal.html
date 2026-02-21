@@ -7,81 +7,356 @@
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <style>
-    .legal-page {
-      max-width: 700px;
+    body { overflow: auto; }
+
+    .legal-wrap {
+      max-width: 760px;
       margin: 0 auto;
-      padding: 40px 24px 80px;
-      line-height: 1.8;
-      color: var(--fg-dim);
+      padding: 0 24px 80px;
     }
-    .legal-page h1 { color: var(--accent); margin-bottom: 8px; }
-    .legal-page h2 { color: var(--fg); margin-top: 36px; margin-bottom: 12px; font-size: 1.3rem; }
-    .legal-page p { margin-bottom: 12px; }
-    .legal-page a { color: var(--accent); }
-    .legal-nav { margin-bottom: 32px; }
-    .legal-nav a { margin-right: 20px; font-weight: 600; }
-    .legal-back { margin-top: 40px; }
-    .legal-back a { color: var(--accent); text-decoration: none; }
-    .address { background: var(--bg3); padding: 16px 20px; border-radius: 8px; font-family: var(--font-mono); font-size: 0.9rem; line-height: 1.8; margin: 12px 0; }
+
+    /* Header */
+    .legal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0 16px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 40px;
+    }
+    .legal-header .back-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--fg-dim);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-family: var(--font-mono);
+      transition: color 0.2s;
+    }
+    .legal-header .back-link:hover { color: var(--accent); }
+    .legal-header .back-link svg { width: 18px; height: 18px; }
+
+    .legal-tabs {
+      display: flex;
+      gap: 4px;
+    }
+    .legal-tabs a {
+      padding: 6px 16px;
+      border-radius: 6px;
+      color: var(--fg-dim);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .legal-tabs a:hover,
+    .legal-tabs a.active {
+      background: var(--bg3);
+      color: var(--fg);
+    }
+
+    /* Sections */
+    .legal-section {
+      margin-bottom: 56px;
+    }
+    .legal-section h1 {
+      font-size: 1.8rem;
+      color: var(--fg);
+      margin-bottom: 4px;
+      letter-spacing: -0.5px;
+    }
+    .legal-section .subtitle {
+      color: var(--fg-dim);
+      font-size: 0.9rem;
+      margin-bottom: 32px;
+    }
+    .legal-section h2 {
+      font-size: 1.1rem;
+      color: var(--accent);
+      margin: 28px 0 10px;
+      font-weight: 700;
+    }
+    .legal-section p,
+    .legal-section li {
+      color: var(--fg-dim);
+      line-height: 1.75;
+      margin-bottom: 10px;
+      font-size: 0.95rem;
+    }
+    .legal-section ul {
+      padding-left: 20px;
+      margin-bottom: 12px;
+    }
+    .legal-section li { margin-bottom: 6px; }
+    .legal-section a { color: var(--accent); }
+    .legal-section code {
+      background: var(--bg3);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+    }
+    .legal-section strong { color: var(--fg); }
+
+    /* Address card */
+    .address-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin: 16px 0;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      line-height: 1.9;
+      color: var(--fg);
+    }
+    .address-card .label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--fg-dim);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    /* TL;DR box */
+    .tldr {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--green);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin: 20px 0 28px;
+    }
+    .tldr-label {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--green);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .tldr p {
+      color: var(--fg);
+      margin-bottom: 0;
+      font-size: 0.95rem;
+    }
+
+    /* Data table */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.88rem;
+    }
+    .data-table th {
+      text-align: left;
+      padding: 10px 14px;
+      background: var(--bg3);
+      color: var(--fg);
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .data-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--fg-dim);
+      vertical-align: top;
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .badge-green { background: rgba(158,206,106,0.15); color: var(--green); }
+    .badge-yellow { background: rgba(224,175,104,0.15); color: var(--yellow); }
+    .badge-red { background: rgba(247,118,142,0.15); color: var(--red); }
+
+    /* Divider */
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 48px 0;
+    }
+
+    /* Footer */
+    .legal-footer {
+      text-align: center;
+      padding: 32px 0;
+      border-top: 1px solid var(--border);
+      color: var(--fg-dim);
+      font-size: 0.85rem;
+    }
+    .legal-footer a { color: var(--accent); text-decoration: none; }
+    .legal-footer a:hover { text-decoration: underline; }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+      .legal-section h1 { font-size: 1.4rem; }
+      .legal-tabs { gap: 0; }
+      .legal-tabs a { padding: 6px 10px; font-size: 0.8rem; }
+      .data-table { font-size: 0.82rem; }
+      .data-table th, .data-table td { padding: 8px 10px; }
+    }
   </style>
+  <script>
+    function updateTabs() {
+      const hash = location.hash || '#imprint';
+      document.querySelectorAll('.legal-tabs a').forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === hash);
+      });
+    }
+    window.addEventListener('hashchange', updateTabs);
+    window.addEventListener('DOMContentLoaded', updateTabs);
+  </script>
 </head>
 <body>
-  <div class="legal-page">
-    <nav class="legal-nav">
-      <a href="/">← learnjq</a>
-      <a href="#imprint">Imprint</a>
-      <a href="#privacy">Privacy</a>
-    </nav>
+  <div class="legal-wrap">
 
-    <section id="imprint">
+    <header class="legal-header">
+      <a href="/" class="back-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+        learnjq
+      </a>
+      <nav class="legal-tabs">
+        <a href="#imprint">Imprint</a>
+        <a href="#privacy">Privacy</a>
+      </nav>
+    </header>
+
+    <!-- ====== IMPRINT ====== -->
+    <section id="imprint" class="legal-section">
       <h1>Imprint</h1>
-      <p>Legal notice according to § 5 DDG</p>
+      <p class="subtitle">Legal notice pursuant to § 5 DDG (German Digital Services Act)</p>
 
-      <h2>Responsible</h2>
-      <div class="address">
+      <h2>Service provider</h2>
+      <div class="address-card">
+        <div class="label">Address</div>
         Michael Iden<br>
         c/o IP-Management #7090<br>
         Ludwig-Erhard-Straße 18<br>
-        20459 Hamburg<br>
-        Germany
+        20459 Hamburg, Germany
       </div>
 
       <h2>Contact</h2>
-      <p>Email: legal@mickhat.xyz</p>
+      <p>Email: <a href="mailto:legal@mickhat.xyz">legal@mickhat.xyz</a></p>
+
+      <h2>Liability for content</h2>
+      <p>The content of this website has been created with care. However, I cannot guarantee the accuracy, completeness, or timeliness of the content. As a service provider, I am responsible for my own content on these pages under general law pursuant to § 7(1) DDG. Pursuant to §§ 8–10 DDG, I am not obligated to monitor transmitted or stored third-party information or to investigate circumstances indicating illegal activity.</p>
+
+      <h2>Liability for links</h2>
+      <p>This site contains links to external websites over which I have no control. I therefore cannot accept any liability for their content. The respective provider or operator is always responsible for the content of linked pages.</p>
+
+      <h2>Copyright</h2>
+      <p>The source code of learnjq is published under the <a href="https://github.com/Mickhat/learnjq/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>. The lesson content, design, and branding are © 2026 Michael Iden.</p>
+
+      <h2>Dispute resolution</h2>
+      <p>The European Commission provides a platform for online dispute resolution (OS): <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a>. I am not willing or obliged to participate in dispute resolution proceedings before a consumer arbitration board.</p>
     </section>
 
-    <section id="privacy">
+    <hr class="section-divider">
+
+    <!-- ====== PRIVACY ====== -->
+    <section id="privacy" class="legal-section">
       <h1>Privacy Policy</h1>
-      <p>Last updated: February 2026</p>
+      <p class="subtitle">Last updated: February 2026 · Effective immediately</p>
 
-      <h2>The short version</h2>
-      <p>learnjq.dev does not track you. No analytics, no cookies, no ads, no user accounts. We store as little data as technically possible.</p>
+      <div class="tldr">
+        <div class="tldr-label">TL;DR</div>
+        <p>No tracking. No cookies. No analytics. No accounts. Your progress stays in your browser. The only data we process is what you type into the playground — and we don't store it.</p>
+      </div>
 
-      <h2>Hosting</h2>
-      <p>This site is hosted on infrastructure in Germany. When you visit, the server temporarily processes your IP address to deliver the page. Standard server logs (IP, timestamp, requested URL, HTTP status) may be retained for up to 7 days for security and debugging purposes. Legal basis: Art. 6(1)(f) GDPR (legitimate interest in secure operation).</p>
+      <h2>1. Controller</h2>
+      <p>The controller within the meaning of Art. 4(7) GDPR is:</p>
+      <div class="address-card">
+        <div class="label">Data Controller</div>
+        Michael Iden<br>
+        c/o IP-Management #7090<br>
+        Ludwig-Erhard-Straße 18<br>
+        20459 Hamburg, Germany<br>
+        <a href="mailto:legal@mickhat.xyz">legal@mickhat.xyz</a>
+      </div>
 
-      <h2>Local storage</h2>
-      <p>learnjq uses your browser's <code>localStorage</code> to save your lesson progress and theme preference. This data never leaves your device — it is not sent to our server. You can clear it anytime via your browser settings or the "Reset" button on the site.</p>
+      <h2>2. What we process</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Purpose</th>
+            <th>Storage</th>
+            <th>Legal basis</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>IP address, timestamp, URL, user-agent</td>
+            <td>Serve page, security, debugging</td>
+            <td><span class="badge badge-yellow">7 days</span> (server logs)</td>
+            <td>Art. 6(1)(f) GDPR</td>
+          </tr>
+          <tr>
+            <td>jq filter + JSON input</td>
+            <td>Execute your query server-side</td>
+            <td><span class="badge badge-green">Not stored</span> (memory only)</td>
+            <td>Art. 6(1)(b) GDPR</td>
+          </tr>
+          <tr>
+            <td>Lesson progress, theme preference</td>
+            <td>Remember your place</td>
+            <td><span class="badge badge-green">Your device</span> (localStorage)</td>
+            <td>Not applicable (client-only)</td>
+          </tr>
+        </tbody>
+      </table>
 
-      <h2>Cookies</h2>
-      <p>learnjq does not set any cookies.</p>
+      <h2>3. What we don't do</h2>
+      <ul>
+        <li><strong>No cookies</strong> — not a single one</li>
+        <li><strong>No analytics</strong> — no Google Analytics, no Plausible, no Matomo, nothing</li>
+        <li><strong>No third-party resources</strong> — no external fonts, scripts, CDNs, or tracking pixels</li>
+        <li><strong>No ads</strong> — and never will be</li>
+        <li><strong>No user accounts</strong> — nothing to sign up for</li>
+        <li><strong>No data sharing</strong> — your data never leaves our server</li>
+      </ul>
 
-      <h2>jq execution</h2>
-      <p>When you run a jq filter, the JSON input and filter you typed are sent to our server for execution. This data is processed in memory only and is not stored or logged.</p>
+      <h2>4. Hosting</h2>
+      <p>learnjq.dev is hosted on dedicated infrastructure in <strong>Germany</strong> (Hetzner Online GmbH, Gunzenhausen). No data is transferred outside the EU/EEA. TLS encryption is enforced for all connections.</p>
 
-      <h2>Third-party services</h2>
-      <p>learnjq does not load any third-party resources — no external fonts, scripts, analytics, or tracking pixels.</p>
+      <h2>5. Local storage</h2>
+      <p>Your browser's <code>localStorage</code> is used to save lesson progress and your theme preference. This data <strong>never leaves your device</strong> — it is not transmitted to our server. You can clear it anytime via your browser settings, DevTools, or the reset button on the site.</p>
 
-      <h2>Your rights</h2>
-      <p>Under the GDPR, you have the right to access, rectification, erasure, restriction of processing, data portability, and objection. Since we don't collect personal data beyond temporary server logs, there is typically nothing to request. If you have questions, contact us at legal@mickhat.xyz.</p>
+      <h2>6. jq execution</h2>
+      <p>When you run a filter in the playground or a lesson, the JSON input and jq expression you typed are sent to our server via HTTPS, executed in a sandboxed process, and the result is returned. The input data is held in memory only for the duration of execution and is <strong>not logged, stored, or analyzed</strong>.</p>
 
-      <h2>Changes</h2>
-      <p>If this policy changes, we'll update the date above. No email notifications since we don't have your email.</p>
+      <h2>7. Your rights (GDPR)</h2>
+      <p>You have the right to:</p>
+      <ul>
+        <li><strong>Access</strong> (Art. 15) — request what data we have about you</li>
+        <li><strong>Rectification</strong> (Art. 16) — correct inaccurate data</li>
+        <li><strong>Erasure</strong> (Art. 17) — request deletion of your data</li>
+        <li><strong>Restriction</strong> (Art. 18) — limit how we process your data</li>
+        <li><strong>Portability</strong> (Art. 20) — receive your data in a portable format</li>
+        <li><strong>Objection</strong> (Art. 21) — object to processing based on legitimate interest</li>
+      </ul>
+      <p>Since we don't collect personal data beyond temporary server logs, there is typically nothing to request. You also have the right to lodge a complaint with a supervisory authority, in particular in your member state of residence. For Germany: <a href="https://www.bfdi.bund.de" target="_blank" rel="noopener">BfDI</a> or your state's data protection authority.</p>
+
+      <h2>8. Changes to this policy</h2>
+      <p>If this policy changes, we'll update the date above. Since we don't have your email (or any other contact details), we can't notify you directly — but we'll keep a changelog in our <a href="https://github.com/Mickhat/learnjq" target="_blank" rel="noopener">GitHub repository</a>.</p>
     </section>
 
-    <div class="legal-back">
-      <a href="/">← Back to learnjq</a>
-    </div>
+    <footer class="legal-footer">
+      <a href="/">← Back to learnjq</a> · <a href="https://github.com/Mickhat/learnjq" target="_blank" rel="noopener">GitHub</a>
+    </footer>
+
   </div>
 </body>
 </html>
