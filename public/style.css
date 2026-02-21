@@ -148,6 +148,8 @@ body {
   overflow-y: auto;
   padding: 12px;
   padding-bottom: 36px;
+  position: relative;
+  z-index: 51;
 }
 .sidebar-header { margin-bottom: 12px; }
 #lesson-search {
@@ -428,6 +430,8 @@ body {
   overflow-y: auto;
   padding: 16px;
   padding-bottom: 36px;
+  position: relative;
+  z-index: 51;
 }
 #challenge-sidebar h3 { margin-bottom: 12px; }
 #challenge-content {
