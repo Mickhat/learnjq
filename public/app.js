@@ -116,6 +116,13 @@ function showMode(mode, skipHash) {
   if (mode === 'tutorial') initTutorialSandboxes();
   updateMobileToggle(mode);
 
+  // Hide footer on full-screen modes
+  const footer = document.getElementById('site-footer');
+  if (footer) {
+    const hideFooter = ['playground', 'visualizer'].includes(mode);
+    footer.style.display = hideFooter ? 'none' : '';
+  }
+
   if (!skipHash) updateHash();
 }
 
