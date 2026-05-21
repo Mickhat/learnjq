@@ -268,11 +268,11 @@
     <!-- ====== PRIVACY ====== -->
     <section id="privacy" class="legal-section">
       <h1>Privacy Policy</h1>
-      <p class="subtitle">Last updated: February 2026 · Effective immediately</p>
+      <p class="subtitle">Last updated: May 2026 · Effective immediately</p>
 
       <div class="tldr">
         <div class="tldr-label">TL;DR</div>
-        <p>No tracking. No cookies. No analytics. No accounts. Your progress stays in your browser. The only data we process is what you type into the playground — and we don't store it.</p>
+        <p>No tracking. No cookies. No analytics. No accounts. Your progress stays in your browser. jq runs entirely in your browser via WebAssembly — your filters and JSON never leave your device.</p>
       </div>
 
       <h2>1. Controller</h2>
@@ -300,14 +300,14 @@
           <tr>
             <td>IP address, timestamp, URL, user-agent</td>
             <td>Serve page, security, debugging</td>
-            <td><span class="badge badge-yellow">7 days</span> (server logs)</td>
+            <td><span class="badge badge-yellow">Short-term</span> (Cloudflare edge logs)</td>
             <td>Art. 6(1)(f) GDPR</td>
           </tr>
           <tr>
             <td>jq filter + JSON input</td>
-            <td>Execute your query server-side</td>
-            <td><span class="badge badge-green">Not stored</span> (memory only)</td>
-            <td>Art. 6(1)(b) GDPR</td>
+            <td>Execute your query in-browser via WebAssembly</td>
+            <td><span class="badge badge-green">Never leaves your device</span></td>
+            <td>Not applicable (client-only)</td>
           </tr>
           <tr>
             <td>Lesson progress, theme preference</td>
@@ -322,20 +322,21 @@
       <ul>
         <li><strong>No cookies</strong> — not a single one</li>
         <li><strong>No analytics</strong> — no Google Analytics, no Plausible, no Matomo, nothing</li>
-        <li><strong>No third-party resources</strong> — no external fonts, scripts, CDNs, or tracking pixels</li>
+        <li><strong>No tracking scripts or pixels</strong> — no external fonts, analytics CDNs, or fingerprinting</li>
+        <li><strong>One external script</strong> — the jq WebAssembly engine is loaded from <code>unpkg.com</code> (npm CDN) for jq execution; no data is sent to it</li>
         <li><strong>No ads</strong> — and never will be</li>
         <li><strong>No user accounts</strong> — nothing to sign up for</li>
         <li><strong>No data sharing</strong> — your data never leaves our server</li>
       </ul>
 
       <h2>4. Hosting</h2>
-      <p>learnjq.dev is hosted on dedicated infrastructure in <strong>Germany</strong> (Hetzner Online GmbH, Gunzenhausen). No data is transferred outside the EU/EEA. TLS encryption is enforced for all connections.</p>
+      <p>learnjq.dev is hosted on <strong>Cloudflare Workers</strong> (Cloudflare, Inc., 101 Townsend St, San Francisco, CA 94107, USA). Static assets are served from Cloudflare's global edge network. Cloudflare may process standard request metadata (IP address, user-agent, URL) as part of serving the site and DDoS protection. See <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Cloudflare's Privacy Policy</a> for details. TLS encryption is enforced for all connections.</p>
 
       <h2>5. Local storage</h2>
       <p>Your browser's <code>localStorage</code> is used to save lesson progress and your theme preference. This data <strong>never leaves your device</strong> — it is not transmitted to our server. You can clear it anytime via your browser settings, DevTools, or the reset button on the site.</p>
 
       <h2>6. jq execution</h2>
-      <p>When you run a filter in the playground or a lesson, the JSON input and jq expression you typed are sent to our server via HTTPS, executed in a sandboxed process, and the result is returned. The input data is held in memory only for the duration of execution and is <strong>not logged, stored, or analyzed</strong>.</p>
+      <p>All jq execution happens <strong>entirely in your browser</strong> using WebAssembly (via the open-source <code>jq-web</code> library). When you run a filter in the playground, a lesson, or the visualizer, your JSON input and jq expression are processed locally — they are <strong>never sent to any server</strong>. The jq WASM binary itself is loaded once from <code>unpkg.com</code> on first visit; after that it may be cached by your browser.</p>
 
       <h2>7. Your rights (GDPR)</h2>
       <p>You have the right to:</p>
