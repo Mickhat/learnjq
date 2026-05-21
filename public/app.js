@@ -1022,6 +1022,13 @@ function init() {
   // Show jq version in logo tooltip
   const brand = document.querySelector('.logo-mark');
   if (brand) brand.title = 'jq (wasm)';
+
+  // Re-run tutorial sandboxes once WASM is ready (they may have run before init)
+  jq.onInitialized.addListener(() => {
+    if (document.getElementById('mode-tutorial')?.classList.contains('active')) {
+      initTutorialSandboxes();
+    }
+  });
 }
 
 init();
