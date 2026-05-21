@@ -79,16 +79,16 @@ function initTutorialSandboxes() {
 async function runJq(input, filter, opts = {}) {
   const start = performance.now();
   try {
-    const res = await fetch('/api/jq', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ input, filter, ...opts })
-    });
-    const data = await res.json();
-    data.time = Math.round(performance.now() - start);
-    return data;
+    const flags = [];
+    if (opts.rawOutput) flags.push('-r');
+    if (opts.slurp)     flags.push('-s');
+    if (opts.rawInput)  flags.push('-R');
+    if (opts.nullInput) flags.push('-n');
+    const effectiveInput = opts.nullInput ? 'null' : (input || '{}');
+    const output = jq.raw(effectiveInput, filter, flags);
+    return { output, time: Math.round(performance.now() - start) };
   } catch (e) {
-    return { error: e.message, time: 0 };
+    return { error: e.message, time: Math.round(performance.now() - start) };
   }
 }
 
@@ -644,6 +644,33 @@ function vizExample(idx) {
   runVisualizer();
 }
 
+/** Split a jq filter on top-level pipe characters */
+function splitPipes(filter) {
+  const parts = [];
+  let current = '';
+  let depth = 0, bracketDepth = 0, braceDepth = 0;
+  let inString = false, escape = false;
+  for (let i = 0; i < filter.length; i++) {
+    const ch = filter[i];
+    if (escape) { current += ch; escape = false; continue; }
+    if (ch === '\\') { current += ch; escape = true; continue; }
+    if (ch === '"') { inString = !inString; current += ch; continue; }
+    if (inString) { current += ch; continue; }
+    if (ch === '(') { depth++; current += ch; continue; }
+    if (ch === ')') { depth--; current += ch; continue; }
+    if (ch === '[') { bracketDepth++; current += ch; continue; }
+    if (ch === ']') { bracketDepth--; current += ch; continue; }
+    if (ch === '{') { braceDepth++; current += ch; continue; }
+    if (ch === '}') { braceDepth--; current += ch; continue; }
+    if (ch === '|' && depth === 0 && bracketDepth === 0 && braceDepth === 0) {
+      parts.push(current); current = ''; continue;
+    }
+    current += ch;
+  }
+  if (current.trim()) parts.push(current);
+  return parts;
+}
+
 /** Run the pipe visualizer — split filter on pipes and show step-by-step results */
 async function runVisualizer() {
   const input = document.getElementById('viz-input').value;
@@ -655,19 +682,20 @@ async function runVisualizer() {
   pipeline.innerHTML = '<div class="viz-empty"><p>⏳ Running...</p></div>';
 
   try {
-    const res = await fetch('/api/jq/steps', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ input, filter })
+    const pipes = splitPipes(filter);
+    if (pipes.length === 0) { pipeline.innerHTML = ''; return; }
+
+    const steps = pipes.map((_, idx) => {
+      const f = pipes.slice(0, idx + 1).join(' | ');
+      try {
+        const output = jq.raw(input || '{}', f);
+        return { step: idx + 1, fragment: pipes[idx].trim(), fullFilter: f, output: output?.trimEnd() || '', error: null };
+      } catch (e) {
+        return { step: idx + 1, fragment: pipes[idx].trim(), fullFilter: f, output: '', error: e.message };
+      }
     });
-    const data = await res.json();
 
-    if (data.error) {
-      pipeline.innerHTML = `<div class="viz-empty"><p>❌ ${escapeHtml(data.error)}</p></div>`;
-      return;
-    }
-
-    renderPipeline(data.steps, input);
+    renderPipeline(steps, input);
   } catch (e) {
     pipeline.innerHTML = `<div class="viz-empty"><p>❌ ${escapeHtml(e.message)}</p></div>`;
   }
@@ -992,10 +1020,8 @@ function init() {
   window.addEventListener('hashchange', () => loadFromHash());
 
   // Show jq version in logo tooltip
-  fetch('/api/version').then(r => r.json()).then(d => {
-    const brand = document.querySelector('.logo-mark');
-    if (brand) brand.title = d.version || 'jq';
-  });
+  const brand = document.querySelector('.logo-mark');
+  if (brand) brand.title = 'jq (wasm)';
 }
 
 init();
